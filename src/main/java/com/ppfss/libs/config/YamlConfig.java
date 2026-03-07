@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.io.File;
 
+@SuppressWarnings("unused")
 @Setter
 @Getter
 public abstract class YamlConfig {

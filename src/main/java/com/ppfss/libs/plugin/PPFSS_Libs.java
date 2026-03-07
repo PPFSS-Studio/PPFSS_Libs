@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("unused")
 public final class PPFSS_Libs extends JavaPlugin {
     @Getter
     public static PPFSS_Libs instance;
