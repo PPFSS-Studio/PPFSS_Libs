@@ -1,0 +1,68 @@
+name: Build Plugin
+
+on:
+  push:
+    branches:
+      - main
+      - spigot/main
+
+  pull_request:
+    branches:
+      - main
+      - spigot/main
+
+  workflow_dispatch:
+
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 16
+        uses: actions/setup-java@v4
+        with:
+          java-version: '16'
+          distribution: 'temurin'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: "~/.m2/repository"
+          key: "${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}"
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build
+        run: mvn -B package --file pom.xml
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: PPFSS_Quests.jar
+          path: target/*.jar
+          if-no-files-found: error
+
+      - name: Extract Maven metadata
+        id: maven-metadata
+        run: |
+          version=$(mvn -q -DforceStdout -Dexpression=project.version help:evaluate)
+          project_name=$(mvn -q -DforceStdout -Dexpression=project.name help:evaluate)
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          echo "name=${project_name}" >> $GITHUB_OUTPUT
+
+
+      - name: Create or Update Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.maven-metadata.outputs.version }}
+          name: ${{ steps.maven-metadata.outputs.name }} ${{ steps.maven-metadata.outputs.version }}
+          artifacts: target/*.jar
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
