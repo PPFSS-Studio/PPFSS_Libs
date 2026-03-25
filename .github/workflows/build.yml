@@ -3,13 +3,11 @@ name: Build Plugin
 on:
   push:
     branches:
-      - main
-      - spigot/main
+      - master
 
   pull_request:
     branches:
-      - main
-      - spigot/main
+      - master
 
   workflow_dispatch:
 
