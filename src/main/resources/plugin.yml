@@ -7,3 +7,4 @@ authors: [ PPFSS ]
 
 soft-depend:
   - PPFSS_Installer
+  - LuckPerms
