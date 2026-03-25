@@ -6,7 +6,7 @@
 
     <groupId>com.ppfss</groupId>
     <artifactId>libs</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
 
     <name>PPFSS_Libs</name>

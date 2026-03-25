@@ -225,6 +225,15 @@ public class IoCContainer {
     }
 
     @SuppressWarnings("unchecked")
+    public <T> T getIfExists(Class<T> type) {
+        Object instance = instances.get(type);
+        if (instance != null) {
+            return (T) instance;
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
     private <H> Optional<H> findHandler(Map<Class<? extends Annotation>, ?> handlers, Annotation annotation) {
         return Optional.ofNullable((H) handlers.get(annotation.annotationType()));
     }
