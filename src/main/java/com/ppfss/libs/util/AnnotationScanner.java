@@ -26,7 +26,6 @@ public final class AnnotationScanner {
 
             scanResult.getAllClasses().forEach(classInfo -> {
                 try {
-                    log.info("Scanning class {}", classInfo.getName());
                     classes.add(classInfo.loadClass());
                 } catch (Throwable throwable) {
                     log.warn("Failed to load class {}", classInfo.getName(), throwable);
