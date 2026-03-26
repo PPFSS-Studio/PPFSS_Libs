@@ -35,6 +35,7 @@ public class PluginIoC {
     private final Plugin plugin;
     private final PluginManager pluginManager;
     private final Set<Class<? extends Listener>> listeners = new HashSet<>();
+    private final YamlConfigLoader configLoader;
 
     @SuppressWarnings("unchecked")
     public PluginIoC(JavaPlugin plugin) {
@@ -48,20 +49,30 @@ public class PluginIoC {
 
         Set<Class<?>> classes = AnnotationScanner.scanPlugin(plugin);
 
+        configLoader = new YamlConfigLoader(plugin, container);
 
-        for (Class<?> clazz : classes) {
-            if (YamlConfig.class.isAssignableFrom(clazz) && !Modifier.isAbstract(clazz.getModifiers())) {
-                YamlConfig cfg = container.create((Class<YamlConfig>) clazz);
-                container.registerInstance((Class<YamlConfig>) clazz, cfg);
-            }
-        }
-
-        YamlConfigLoader configLoader = new YamlConfigLoader(plugin, container);
         registerInstance(YamlConfigLoader.class, configLoader);
+
+        classes.stream()
+                .filter(clazz -> YamlConfig.class.isAssignableFrom(clazz) && !Modifier.isAbstract(clazz.getModifiers()))
+                .map(clazz -> (Class<? extends YamlConfig>) clazz)
+                .forEach(this::registerYamlConfig);
+
 
         container.initialize(classes);
 
         listeners.forEach(this::registerListener);
+    }
+
+    private <T extends YamlConfig> void registerYamlConfig(Class<T> clazz) {
+        // TODO: LazyLoad
+        T config = container.getIfExists(clazz);
+
+        if  (config == null) {
+            config = configLoader.loadFromClass(clazz);
+        }
+
+        container.registerInstance(clazz, config);
     }
 
     private <T extends Listener> void registerListener(Class<T> clazz) {
@@ -79,12 +90,12 @@ public class PluginIoC {
      */
     private void registerDefaultHandlers() {
 
-        // Классы с @Component
+        // Классы
         container.registerClassHandler(new ComponentHandler());
         container.registerClassHandler(new GsonAdapterHandler());
         container.registerClassHandler(new AutoListenerHandler(listeners));
 
-        // Поля с @Inject
+        // Поля
         container.registerFieldHandler(new InjectFieldHandler());
 
     }

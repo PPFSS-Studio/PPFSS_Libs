@@ -1,3 +1,7 @@
+// PPFSS_Libs Plugin
+// Авторские права (c) 2026 PPFSS
+// Лицензия: MIT
+
 package com.ppfss.libs.util;
 
 import io.github.classgraph.ClassGraph;
@@ -20,8 +24,27 @@ public final class AnnotationScanner {
 
         try (ScanResult scanResult = new ClassGraph()
                 .enableClassInfo()
+
                 .overrideClassLoaders(pluginLoader)
+
                 .ignoreParentClassLoaders()
+
+                .rejectPackages(
+                        "org.bukkit",
+                        "net.minecraft",
+                        "com.mojang",
+                        "org.spigotmc",
+                        "io.papermc",
+                        "io.github.classgraph",
+                        "nonapi.io.github.classgraph",
+                        "org.slf4j",
+                        "ch.qos.logback",
+                        "com.google.common",
+                        "com.google.gson",
+                        "org.apache.commons",
+                        "org.jetbrains.annotations"
+                )
+
                 .scan()) {
 
             scanResult.getAllClasses().forEach(classInfo -> {

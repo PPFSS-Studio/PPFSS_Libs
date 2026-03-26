@@ -1,3 +1,7 @@
+// PPFSS_Libs Plugin
+// Авторские права (c) 2026 PPFSS
+// Лицензия: MIT
+
 package com.ppfss.libs.ioc.handlers.impl;
 
 import com.ppfss.libs.ioc.IoCContainer;

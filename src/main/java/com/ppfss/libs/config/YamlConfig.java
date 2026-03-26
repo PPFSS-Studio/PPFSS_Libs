@@ -46,4 +46,7 @@ public abstract class YamlConfig {
             current = current.getSuperclass();
         }
     }
+
+
+    public abstract String getFileName();
 }
