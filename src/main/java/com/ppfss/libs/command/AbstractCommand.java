@@ -14,27 +14,12 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public abstract class AbstractCommand extends Command {
-
-
     protected final Map<String, SubCommand> subCommands = new HashMap<>();
 
-    public AbstractCommand(String name, Plugin plugin) {
-        super(name);
-
-        registerCommand(plugin);
+    public AbstractCommand() {
+        super("temp");
     }
 
-    public AbstractCommand(String name, String description, String usage, List<String> aliases, Plugin plugin) {
-        super(name, description, usage, aliases);
-
-        registerCommand(plugin);
-    }
-
-    public AbstractCommand(String name, List<String> aliases, Plugin plugin) {
-        super(name, "", "", aliases);
-
-        registerCommand(plugin);
-    }
 
     public void registerSubCommand(SubCommand subCommand) {
         String name = subCommand.getName().toLowerCase();
@@ -42,10 +27,22 @@ public abstract class AbstractCommand extends Command {
         subCommands.put(name, subCommand);
     }
 
-    private void registerCommand(Plugin plugin) {
+    public void register(Plugin plugin) {
+        if (isRegistered()){
+            throw new IllegalStateException("This command has already been registered");
+        }
+
+        this.setName(getName());
+
+        List<String> aliases = new ArrayList<>();
+
         Bukkit.getCommandMap().register(plugin.getName(), this);
     }
 
+
+    public abstract @NotNull String getName();
+
+    public @NotNull List<String> getAliases() {return Collections.emptyList();}
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
