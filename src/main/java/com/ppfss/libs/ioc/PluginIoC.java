@@ -57,6 +57,7 @@ public class PluginIoC {
 
         registerInstance(JavaPlugin.class, plugin);
         registerInstance(Plugin.class, plugin);
+        registerInstance(PluginIoC.class, this);
 
         registerDefaultHandlers();
 
