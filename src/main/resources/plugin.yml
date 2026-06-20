@@ -5,6 +5,8 @@ api-version: '1.16'
 load: STARTUP
 authors: [ OntaDev ]
 
+depend:
+  - LuckPerms
+
 soft-depend:
   - OntaDev_Installer
-  - LuckPerms

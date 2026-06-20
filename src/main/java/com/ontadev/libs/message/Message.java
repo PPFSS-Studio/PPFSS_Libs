@@ -71,6 +71,15 @@ public class Message {
     }
 
     public void send(UUID uuid) {
+        if (Bukkit.isPrimaryThread()){
+            sendSync(uuid);
+            return;
+        }
+
+        Bukkit.getScheduler().runTask(plugin, ()->sendSync(uuid));
+    }
+
+    private void sendSync(UUID uuid){
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) send(player);
     }
