@@ -2,8 +2,9 @@
 // Авторские права (c) 2026 OntaDev
 // Лицензия: MIT
 
-package com.ontadev.libs.menu;
+package com.ontadev.libs.item;
 
+import com.ontadev.libs.menu.enums.InteractionType;
 import com.ontadev.libs.message.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

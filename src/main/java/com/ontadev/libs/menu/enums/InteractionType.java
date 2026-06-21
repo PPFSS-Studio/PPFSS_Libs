@@ -1,4 +1,4 @@
-package com.ontadev.libs.menu;
+package com.ontadev.libs.menu.enums;
 
 import org.bukkit.event.inventory.ClickType;
 

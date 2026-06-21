@@ -6,7 +6,7 @@ package com.ontadev.libs.ioc;
 
 import com.ontadev.libs.config.YamlConfigLoader;
 import com.ontadev.libs.ioc.handlers.impl.*;
-import com.ontadev.libs.menu.MenuManager;
+import com.ontadev.libs.menu.manager.MenuManager;
 import com.ontadev.libs.menu.MenuManagerImpl;
 import com.ontadev.libs.message.Message;
 import com.ontadev.libs.player.PlayerResolver;
@@ -41,6 +41,8 @@ public class PluginIoC {
     private final YamlConfigLoader configLoader;
     private MenuManager menuManager;
 
+    private Set<Class<?>> tempClasses;
+
     /**
      * Инициализирует IoC контейнер для плагина
      * <p>
@@ -57,12 +59,7 @@ public class PluginIoC {
     public PluginIoC(JavaPlugin plugin) {
         this.plugin = plugin;
 
-        registerPluginInstance(plugin);
-        registerInstance(JavaPlugin.class, plugin);
-        registerInstance(Plugin.class, plugin);
-        registerInstance(IoCContainer.class, container);
-        registerInstance(Server.class, plugin.getServer());
-        registerInstance(PluginIoC.class, this);
+        registerDefaultInstance(plugin);
 
         shutdownHandler = new ShutdownHandler();
 
@@ -74,9 +71,25 @@ public class PluginIoC {
 
         registerDefaultHandlers();
 
-        // Инициализируем контейнер
-        container.initialize(classes);
+        tempClasses = classes;
+    }
 
+    public void initializeContainer(){
+        if (tempClasses == null) return;
+
+        container.initialize(tempClasses);
+
+        tempClasses = null;
+    }
+
+    private void registerDefaultInstance(JavaPlugin plugin){
+        registerPluginInstance(plugin);
+
+        registerInstance(JavaPlugin.class, plugin);
+        registerInstance(Plugin.class, plugin);
+        registerInstance(Server.class, plugin.getServer());
+        registerInstance(IoCContainer.class, container);
+        registerInstance(PluginIoC.class, this);
     }
 
     private void registerMenuManager(){

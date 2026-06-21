@@ -4,6 +4,8 @@
 
 package com.ontadev.libs.menu;
 
+import com.ontadev.libs.item.ItemModel;
+import com.ontadev.libs.menu.manager.MenuManager;
 import com.ontadev.libs.message.Message;
 import com.ontadev.libs.player.PlayerSnapshot;
 import lombok.Getter;
@@ -89,7 +91,7 @@ public abstract class AbstractMenu {
     }
 
     /** Возвращает кэшированную карту предметов, отрендеренных из статических моделей. */
-    final synchronized Map<Integer, ItemStack> resolvedStaticItemStacks() {
+    public final synchronized Map<Integer, ItemStack> resolvedStaticItemStacks() {
         if (cachedStaticItemStacks == null) {
             Map<Integer, ItemStack> stacks = new HashMap<>();
             resolvedStaticItems().forEach((slot, model) -> stacks.put(slot, model.toItemStack()));

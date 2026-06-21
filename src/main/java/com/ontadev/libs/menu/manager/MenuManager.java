@@ -2,8 +2,9 @@
 // Авторские права (c) 2026 OntaDev
 // Лицензия: MIT
 
-package com.ontadev.libs.menu;
+package com.ontadev.libs.menu.manager;
 
+import com.ontadev.libs.menu.AbstractMenu;
 import com.ontadev.libs.player.PlayerSnapshot;
 import org.bukkit.inventory.ItemStack;
 

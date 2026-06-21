@@ -4,6 +4,7 @@
 
 package com.ontadev.libs.menu;
 
+import com.ontadev.libs.item.ItemModel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.Inventory;

@@ -8,7 +8,7 @@ import com.ontadev.libs.ioc.IoCContainer;
 import com.ontadev.libs.ioc.annotation.menu.Menu;
 import com.ontadev.libs.ioc.handlers.ClassAnnotationHandler;
 import com.ontadev.libs.menu.AbstractMenu;
-import com.ontadev.libs.menu.MenuManager;
+import com.ontadev.libs.menu.manager.MenuManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
