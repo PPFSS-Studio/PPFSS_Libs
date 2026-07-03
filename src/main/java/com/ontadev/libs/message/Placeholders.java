@@ -6,6 +6,9 @@ package com.ontadev.libs.message;
 
 import java.util.*;
 
+/**
+ * Билдер плейсхолдеров. НЕ потокобезопасен
+ */
 @SuppressWarnings("unused")
 public class Placeholders {
     private final Map<String, List<String>> placeholders;
@@ -14,13 +17,11 @@ public class Placeholders {
         this.placeholders = new LinkedHashMap<>();
     }
 
-
     public Placeholders(Map<String, List<String>> placeholders) {
         if (placeholders == null) throw new IllegalArgumentException("placeholders map is null");
         this.placeholders = new LinkedHashMap<>();
         placeholders.forEach((k, v) -> this.placeholders.put(k, new ArrayList<>(v)));
     }
-
 
     public static Placeholders of(String key, String... values) {
         return new Placeholders().add(key, values);
@@ -34,25 +35,21 @@ public class Placeholders {
         return new Placeholders(placeholders);
     }
 
-    public synchronized Placeholders add(String key, Object... values) {
+    public Placeholders add(String key, Object... values) {
         if (key == null || values == null) throw new IllegalArgumentException("key or values is null: " + key);
-        placeholders.put(key, Arrays.stream(values).map(Object::toString).toList());
+        List<String> asStrings = new ArrayList<>(values.length);
+        for (Object v : values) asStrings.add(String.valueOf(v));
+        placeholders.put(key, asStrings);
         return this;
     }
 
-    public synchronized Placeholders add(String key, String... values) {
-        if (key == null || values == null) throw new IllegalArgumentException("key or values is null: " + key);
-        placeholders.put(key, Arrays.asList(values));
-        return this;
-    }
-
-    public synchronized Placeholders add(String key, List<String> values) {
+    public Placeholders add(String key, List<String> values) {
         if (key == null || values == null) throw new IllegalArgumentException("key or values is null: " + key);
         placeholders.put(key, new ArrayList<>(values));
         return this;
     }
 
-    public synchronized Placeholders add(Placeholders other) {
+    public Placeholders add(Placeholders other) {
         if (other == null) return this;
         other.placeholders.forEach((k, v) -> this.placeholders.merge(k, new ArrayList<>(v), (oldV, newV) -> {
             List<String> merged = new ArrayList<>(oldV);
@@ -62,23 +59,21 @@ public class Placeholders {
         return this;
     }
 
-    public synchronized List<String> apply(List<String> strings) {
+    public List<String> apply(List<String> strings) {
         if (strings == null) return Collections.emptyList();
 
         List<String> result = new ArrayList<>();
-
         for (String str : strings) {
-            List<String> temp = apply(str);
-            if (temp == null || temp.isEmpty()) continue;
-
-            result.addAll(temp);
+            result.addAll(apply(str));
         }
-
         return result;
     }
 
-    public synchronized List<String> apply(String message) {
+    public List<String> apply(String message) {
         if (message == null || message.isEmpty()) return Collections.emptyList();
+        if (message.indexOf('<') < 0 || placeholders.isEmpty()) {
+            return List.of(message);
+        }
 
         List<String> results = new ArrayList<>();
         results.add(message);
