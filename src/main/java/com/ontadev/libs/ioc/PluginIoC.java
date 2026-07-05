@@ -99,6 +99,7 @@ public class PluginIoC {
 
         menuManager = new MenuManagerImpl(plugin, playerResolver);
 
+        registerInstance(PlayerResolver.class, playerResolver);
         registerInstance(MenuManager.class, menuManager);
         registerInstance(MenuManagerImpl.class, (MenuManagerImpl) menuManager);
     }
