@@ -10,6 +10,7 @@ import com.ontadev.libs.message.Message;
 import com.ontadev.libs.player.PlayerSnapshot;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,15 +18,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public abstract class AbstractMenu {
 
     @Setter
     private MenuManager menuManager;
 
-    /** Кэш "слот -> ItemModel" из {@link #staticItems()}. */
+    /**
+     * Кэш "слот -> ItemModel" из {@link #staticItems()}.
+     */
     private Map<Integer, ItemModel> cachedStaticItems;
 
-    /** Кэш "слот -> ItemStack" для статических предметов. */
+    /**
+     * Кэш "слот -> ItemStack" для статических предметов.
+     */
     private Map<Integer, ItemStack> cachedStaticItemStacks;
 
     /**
@@ -59,17 +65,30 @@ public abstract class AbstractMenu {
         return null;
     }
 
-    /** Открывает меню для игрока. */
+    /**
+     * Открывает меню для игрока.
+     */
     public void open(PlayerSnapshot snapshot) {
         manager().open(this, snapshot);
     }
 
-    /** Закрывает меню для игрока, если оно открыто. */
+    /**
+     * Открывает меню для игрока.
+     */
+    public void open(Player player) {
+        manager().open(this, player);
+    }
+
+    /**
+     * Закрывает меню для игрока, если оно открыто.
+     */
     public void close(PlayerSnapshot snapshot) {
         manager().close(snapshot);
     }
 
-    /** Собирает итоговую карту "слот -> предмет" для игрока. */
+    /**
+     * Собирает итоговую карту "слот -> предмет" для игрока.
+     */
     final Map<Integer, ItemModel> resolveItems(PlayerSnapshot snapshot) {
         Map<Integer, ItemModel> resolved = new HashMap<>(resolvedStaticItems());
 
@@ -81,7 +100,9 @@ public abstract class AbstractMenu {
         return resolved;
     }
 
-    /** Возвращает кэшированную карту из {@link #staticItems()}. */
+    /**
+     * Возвращает кэшированную карту из {@link #staticItems()}.
+     */
     final synchronized Map<Integer, ItemModel> resolvedStaticItems() {
         if (cachedStaticItems == null) {
             Map<Integer, ItemModel> items = staticItems();
@@ -90,7 +111,9 @@ public abstract class AbstractMenu {
         return cachedStaticItems;
     }
 
-    /** Возвращает кэшированную карту предметов, отрендеренных из статических моделей. */
+    /**
+     * Возвращает кэшированную карту предметов, отрендеренных из статических моделей.
+     */
     public final synchronized Map<Integer, ItemStack> resolvedStaticItemStacks() {
         if (cachedStaticItemStacks == null) {
             Map<Integer, ItemStack> stacks = new HashMap<>();
@@ -100,7 +123,9 @@ public abstract class AbstractMenu {
         return cachedStaticItemStacks;
     }
 
-    /** Сбрасывает кэш статических предметов. */
+    /**
+     * Сбрасывает кэш статических предметов.
+     */
     protected final synchronized void invalidateStaticItems() {
         cachedStaticItems = null;
         cachedStaticItemStacks = null;

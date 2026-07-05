@@ -116,6 +116,11 @@ public class MenuManagerImpl implements MenuManager, Listener {
     }
 
     @Override
+    public CompletableFuture<Void> open(AbstractMenu abstractMenu, Player player) {
+        return open(abstractMenu, playerResolver.getPlayerSnapshot(player));
+    }
+
+    @Override
     public CompletableFuture<Void> close(PlayerSnapshot snapshot) {
         try {
             return playerResolver.getPlayer(snapshot)

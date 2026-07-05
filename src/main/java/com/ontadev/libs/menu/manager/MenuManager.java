@@ -6,11 +6,13 @@ package com.ontadev.libs.menu.manager;
 
 import com.ontadev.libs.menu.AbstractMenu;
 import com.ontadev.libs.player.PlayerSnapshot;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public interface MenuManager {
 
     /**
@@ -25,21 +27,20 @@ public interface MenuManager {
     /**
      * Opens the given menu for a player, rendering static + dynamic items.
      *
-     * @return
      */
     CompletableFuture<Void> open(AbstractMenu abstractMenu, PlayerSnapshot snapshot);
+
+    CompletableFuture<Void> open(AbstractMenu abstractMenu, Player player);
 
     /**
      * Opens a registered menu by id. Throws {@link IllegalArgumentException} if unknown.
      *
-     * @return
      */
     CompletableFuture<Void> open(String menuId, PlayerSnapshot snapshot);
 
     /**
      * Closes the player's currently open menu, if any.
      *
-     * @return
      */
     CompletableFuture<Void> close(PlayerSnapshot snapshot);
 
@@ -53,7 +54,6 @@ public interface MenuManager {
      * currently open menu and re-renders it in place (e.g. after a balance
      * change). No-op if the player has no menu open.
      *
-     * @return
      */
     CompletableFuture<Void> refresh(PlayerSnapshot snapshot);
 }
